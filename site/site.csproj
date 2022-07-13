@@ -6,4 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\extension-manager\ExtensionManager.csproj" />
+  </ItemGroup>
+
 </Project>

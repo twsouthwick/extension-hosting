@@ -2,7 +2,7 @@
 
 public interface IExtensionManager
 {
-    IAsyncEnumerable<ExtensionInfo> GetExtensionsAsync(CancellationToken token);
+    IEnumerable<ExtensionInfo> Extensions { get; }
 
     Task Add(string name, string path);
 }
