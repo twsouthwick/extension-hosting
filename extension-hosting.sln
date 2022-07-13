@@ -7,6 +7,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Site", "site\Site.csproj", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExtensionManager", "extension-manager\ExtensionManager.csproj", "{61106B5C-94E3-4AEB-A070-D67499D7461F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "abstraction", "abstraction\abstraction.csproj", "{01CE5BA6-610C-4A28-9F6C-A6DD03EC5505}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "extension1", "extension1\extension1.csproj", "{FAC6E918-C28D-474B-82FC-1D95F0F02011}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{61106B5C-94E3-4AEB-A070-D67499D7461F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{61106B5C-94E3-4AEB-A070-D67499D7461F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{61106B5C-94E3-4AEB-A070-D67499D7461F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01CE5BA6-610C-4A28-9F6C-A6DD03EC5505}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01CE5BA6-610C-4A28-9F6C-A6DD03EC5505}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01CE5BA6-610C-4A28-9F6C-A6DD03EC5505}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01CE5BA6-610C-4A28-9F6C-A6DD03EC5505}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FAC6E918-C28D-474B-82FC-1D95F0F02011}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FAC6E918-C28D-474B-82FC-1D95F0F02011}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FAC6E918-C28D-474B-82FC-1D95F0F02011}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FAC6E918-C28D-474B-82FC-1D95F0F02011}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
