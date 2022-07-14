@@ -1,6 +1,7 @@
 using Extension;
 using Extension.Manager;
 using Microsoft.AspNetCore.Mvc;
+using System.Runtime.Loader;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,6 +38,7 @@ app.MapPost("/extensions", ([FromBody] ExtensionPath path, IExtensionManager man
 app.MapDelete("/extensions", ([FromBody] ExtensionPath path, IExtensionManager manager) => manager.DeleteAsync(path.Path));
 app.MapGet("/extensions", (IExtensionManager manager) => manager.Extensions);
 app.MapPost("/run", (IExtensionManager manager, CancellationToken token) => manager.RunAsync(token));
+app.MapGet("/contexts", () => AssemblyLoadContext.All.Select(a => a.Name));
 
 app.Run();
 
