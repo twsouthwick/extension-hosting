@@ -12,6 +12,5 @@ public static class ExtensionDependencyInjectionExtensions
     public static void AddExtensionManagement(this IServiceCollection services)
     {
         services.AddSingleton<IExtensionManager, InMemoryExtensionManager>();
-        services.AddTransient<ExtensionInfoExtractor>();
     }
 }

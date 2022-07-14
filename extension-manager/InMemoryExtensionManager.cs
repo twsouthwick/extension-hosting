@@ -1,24 +1,55 @@
-﻿using System.Collections.Immutable;
-using System.Threading;
+﻿using Microsoft.Extensions.Logging;
+using System.Collections.Immutable;
 
 namespace Extension.Manager;
 
 internal class InMemoryExtensionManager : IExtensionManager
 {
-    private ImmutableList<ExtensionInfo> _extensions = ImmutableList<ExtensionInfo>.Empty;
-    private readonly ExtensionInfoExtractor _extractor;
+    private ImmutableDictionary<string, ExtensionInstance> _extensions = ImmutableDictionary<string, ExtensionInstance>.Empty;
 
-    public InMemoryExtensionManager(ExtensionInfoExtractor extractor)
+    private readonly IServiceProvider _services;
+    private readonly ILogger<InMemoryExtensionManager> _logger;
+
+    public InMemoryExtensionManager(IServiceProvider services, ILogger<InMemoryExtensionManager> logger)
     {
-        _extractor = extractor;
+        _services = services;
+        _logger = logger;
     }
 
-    public Task Add(string name, string directory)
+    public Task<ExtensionInstance> AddAsync(string path)
     {
-        Interlocked.Exchange(ref _extensions, _extensions.Add(_extractor.GetExtensionInfo(name, directory)));
+        try
+        {
+            var info = ImmutableInterlocked.GetOrAdd(ref _extensions, path, static (path, services) => new(services, path), _services);
 
-        return Task.CompletedTask;
+            return Task.FromResult(info);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Unexpected error");
+
+            return Task.FromResult<ExtensionInstance?>(null)!;
+        }
     }
 
-    public IEnumerable<ExtensionInfo> Extensions => _extensions;
+    public Task<ExtensionInstance?> DeleteAsync(string path)
+    {
+        if (ImmutableInterlocked.TryRemove(ref _extensions, path, out var result))
+        {
+            result.Dispose();
+            return Task.FromResult(result)!;
+        }
+
+        return Task.FromResult<ExtensionInstance?>(null);
+    }
+
+    public async Task RunAsync(CancellationToken token)
+    {
+        foreach (var extension in _extensions.Values)
+        {
+            await extension.EntryPoint.RunAsync(token);
+        }
+    }
+
+    public IEnumerable<ExtensionInstance> Extensions => _extensions.Values;
 }

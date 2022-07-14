@@ -3,14 +3,24 @@ using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 builder.Services.AddExtensionManagement();
 
 var app = builder.Build();
 
-app.MapPost("/extensions", ([FromBody] ExtensionAddition extension, IExtensionManager manager) => manager.Add(extension.Name, extension.Directory));
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.MapPost("/extensions", ([FromBody] ExtensionPath path, IExtensionManager manager) => manager.AddAsync(path.Path));
+app.MapDelete("/extensions", ([FromBody] ExtensionPath path, IExtensionManager manager) => manager.DeleteAsync(path.Path));
 app.MapGet("/extensions", (IExtensionManager manager) => manager.Extensions);
+app.MapPost("/run", (IExtensionManager manager, CancellationToken token) => manager.RunAsync(token));
+
 
 app.Run();
-
-record ExtensionAddition(string Name, string Directory);
+record ExtensionPath (string Path);
 

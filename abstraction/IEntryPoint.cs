@@ -1,6 +1,6 @@
 ﻿namespace Extension;
 
-public class IEntryPoint
+public interface IEntryPoint
 {
-
+    Task RunAsync(CancellationToken token);
 }

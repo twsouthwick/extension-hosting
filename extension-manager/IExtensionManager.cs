@@ -2,8 +2,12 @@
 
 public interface IExtensionManager
 {
-    IEnumerable<ExtensionInfo> Extensions { get; }
+    IEnumerable<ExtensionInstance> Extensions { get; }
 
-    Task Add(string name, string path);
+    Task<ExtensionInstance> AddAsync(string path);
+
+    Task<ExtensionInstance?> DeleteAsync(string path);
+
+    Task RunAsync(CancellationToken token);
 }
 
