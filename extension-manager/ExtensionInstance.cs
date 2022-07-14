@@ -18,7 +18,7 @@ public sealed class ExtensionInstance : IDisposable
         var assembly = _alc.LoadFromAssemblyPath(path);
         var entrypoints = assembly.GetTypes()
             .Where(t => !t.IsAbstract && t.IsPublic)
-            .Where(t => typeof(IEntryPoint).IsAssignableFrom(t))
+            .Where(t => t.IsAssignableTo(typeof(IEntryPoint)))
             .Select(t => (IEntryPoint)ActivatorUtilities.CreateInstance(services, t))
             .ToArray();
 
@@ -65,7 +65,7 @@ public sealed class ExtensionInstance : IDisposable
 
         public void Clear() => Interlocked.Exchange(ref _other, Array.Empty<IEntryPoint>());
 
-        public async Task RunAsync(CancellationToken token)
+        public async Task RunAsync(Context context, CancellationToken token)
         {
             if (_other is null)
             {
@@ -77,7 +77,7 @@ public sealed class ExtensionInstance : IDisposable
 
             foreach (var other in _other)
             {
-                await other.RunAsync(token);
+                await other.RunAsync(context, token);
             }
 
             _logger.LogInformation("Done running extension {Path}", _instance.Path);

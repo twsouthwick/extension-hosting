@@ -26,9 +26,7 @@ internal class InMemoryExtensionManager : IExtensionManager
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Unexpected error");
-
-            return Task.FromResult<ExtensionInstance?>(null)!;
+            throw new ExtensionException("Error adding exception", e);
         }
     }
 
@@ -43,12 +41,16 @@ internal class InMemoryExtensionManager : IExtensionManager
         return Task.FromResult<ExtensionInstance?>(null);
     }
 
-    public async Task RunAsync(CancellationToken token)
+    public async Task<IEnumerable<string>> RunAsync(CancellationToken token)
     {
+        var context = new Context();
+
         foreach (var extension in _extensions.Values)
         {
-            await extension.EntryPoint.RunAsync(token);
+            await extension.EntryPoint.RunAsync(context, token);
         }
+
+        return context.Messages;
     }
 
     public IEnumerable<ExtensionInstance> Extensions => _extensions.Values;

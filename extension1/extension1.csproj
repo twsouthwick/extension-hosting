@@ -7,7 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\abstraction\abstraction.csproj" />
+    <ProjectReference Include="..\abstraction\abstraction.csproj">
+      <PrivateAssets>runtime</PrivateAssets>
+    </ProjectReference>
   </ItemGroup>
 
 </Project>

@@ -4,6 +4,10 @@ namespace Extension1;
 
 public class Extension1Entry : IEntryPoint
 {
-    public Task RunAsync(CancellationToken token)
-        => Task.Delay(TimeSpan.FromSeconds(2), token);
+    public Task RunAsync(Context context, CancellationToken token)
+    {
+        context.Add("Hello from extension1");
+
+        return Task.CompletedTask;
+    }
 }

@@ -1,3 +1,4 @@
+using Extension;
 using Extension.Manager;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,12 +16,29 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.Use(async (ctx, next) =>
+{
+    try
+    {
+        await next();
+    }
+    catch (ExtensionException e)
+    {
+        ctx.Response.StatusCode = 400;
+
+        await ctx.Response.WriteAsJsonAsync(new ProblemDetails
+        {
+            Title = e.Message,
+        });
+    }
+});
+
 app.MapPost("/extensions", ([FromBody] ExtensionPath path, IExtensionManager manager) => manager.AddAsync(path.Path));
 app.MapDelete("/extensions", ([FromBody] ExtensionPath path, IExtensionManager manager) => manager.DeleteAsync(path.Path));
 app.MapGet("/extensions", (IExtensionManager manager) => manager.Extensions);
 app.MapPost("/run", (IExtensionManager manager, CancellationToken token) => manager.RunAsync(token));
 
-
 app.Run();
-record ExtensionPath (string Path);
+
+record ExtensionPath(string Path);
 

@@ -2,5 +2,5 @@
 
 public interface IEntryPoint
 {
-    Task RunAsync(CancellationToken token);
+    Task RunAsync(Context context, CancellationToken token);
 }

@@ -8,6 +8,6 @@ public interface IExtensionManager
 
     Task<ExtensionInstance?> DeleteAsync(string path);
 
-    Task RunAsync(CancellationToken token);
+    Task<IEnumerable<string>> RunAsync(CancellationToken token);
 }
 
