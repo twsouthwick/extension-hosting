@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32616.157
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomEndpointsExample", "custom-endpoints\CustomEndpointsExample\CustomEndpointsExample.csproj", "{1140AD5F-922C-4200-89D3-3BEB5715BB48}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomerEndpointDefinition", "custom-endpoints\CustomerEndpointDefinition\CustomerEndpointDefinition.csproj", "{BAA4E032-5FD1-442E-B7FC-72D7E9BA39B8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1140AD5F-922C-4200-89D3-3BEB5715BB48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1140AD5F-922C-4200-89D3-3BEB5715BB48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1140AD5F-922C-4200-89D3-3BEB5715BB48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1140AD5F-922C-4200-89D3-3BEB5715BB48}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BAA4E032-5FD1-442E-B7FC-72D7E9BA39B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BAA4E032-5FD1-442E-B7FC-72D7E9BA39B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BAA4E032-5FD1-442E-B7FC-72D7E9BA39B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BAA4E032-5FD1-442E-B7FC-72D7E9BA39B8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D38BA67C-FAF0-4C67-8DF6-42D2192D386E}
+	EndGlobalSection
+EndGlobal
