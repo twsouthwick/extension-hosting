@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32616.157
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Site", "site\Site.csproj", "{C8925AD4-9BE4-46EE-9E09-548D1038D7F6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Site", "extensions\site\Site.csproj", "{C8925AD4-9BE4-46EE-9E09-548D1038D7F6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExtensionManager", "extension-manager\ExtensionManager.csproj", "{61106B5C-94E3-4AEB-A070-D67499D7461F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExtensionManager", "extensions\extension-manager\ExtensionManager.csproj", "{61106B5C-94E3-4AEB-A070-D67499D7461F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "abstraction", "abstraction\abstraction.csproj", "{01CE5BA6-610C-4A28-9F6C-A6DD03EC5505}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "abstraction", "extensions\abstraction\abstraction.csproj", "{01CE5BA6-610C-4A28-9F6C-A6DD03EC5505}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "extension1", "extension1\extension1.csproj", "{FAC6E918-C28D-474B-82FC-1D95F0F02011}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "extension1", "extensions\extension1\extension1.csproj", "{FAC6E918-C28D-474B-82FC-1D95F0F02011}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
