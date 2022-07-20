@@ -16,6 +16,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseCustomEndpoints(typeof(CustomerEndpointDefinition.SomeService).Assembly);
+app.MapCustomEndpoints(typeof(CustomerEndpointDefinition.SomeService).Assembly);
 
 app.Run();

@@ -3,9 +3,18 @@ using CustomerEndpointDefinition;
 using Microsoft.AspNetCore.Routing.Patterns;
 using Microsoft.Extensions.Primitives;
 
-internal static class MetadataMappers
+internal static partial class CustomerEndpointExtensions
 {
-    internal static void AddDefaultMetadata(this EndpointBuilder builder, MethodInfo method)
+    public static IEndpointConventionBuilder MapCustomEndpoints(this IEndpointRouteBuilder endpoints, Assembly assembly)
+    {
+        var source = new CustomEndpointSource(assembly);
+
+        endpoints.DataSources.Add(source);
+
+        return source;
+    }
+
+    private static void AddDefaultMetadata(this EndpointBuilder builder, MethodInfo method)
     {
         builder.Metadata.Add(method);
 
@@ -29,38 +38,10 @@ internal static class MetadataMappers
             yield return new HttpMethodMetadata(new[] { "GET" });
         }
 
-        if(attribute is HttpPostAttribute)
+        if (attribute is HttpPostAttribute)
         {
             yield return new HttpMethodMetadata(new[] { "POST" });
         }
-    }
-}
-
-internal static partial class CustomerEndpointExtensions
-{
-    public static void UseCustomEndpoints<T>(this T app, Assembly assembly)
-        where T : IApplicationBuilder, IEndpointRouteBuilder
-    {
-        app.Use(async (ctx, next) =>
-        {
-            await next();
-
-            if (ctx.Features.Get<CustomEndpointResult>() is { } result)
-            {
-                await ctx.Response.WriteAsJsonAsync(result.Result, result.Type, ctx.RequestAborted);
-            }
-        });
-
-        app.MapCustomEndpoints(assembly);
-    }
-
-    private static IEndpointConventionBuilder MapCustomEndpoints(this IEndpointRouteBuilder endpoints, Assembly assembly)
-    {
-        var source = new CustomEndpointSource(assembly);
-
-        endpoints.DataSources.Add(source);
-
-        return source;
     }
 
     private class CustomEndpointSource : EndpointDataSource, IEndpointConventionBuilder
@@ -92,7 +73,16 @@ internal static partial class CustomerEndpointExtensions
                             var requestDelegateFactory = new RequestDelegateFactory(type, method);
 
                             var pattern = RoutePatternFactory.Parse(CreatePathString(serviceRoute.Path, methodRoute.Path));
-                            var builder = new RouteEndpointBuilder(requestDelegateFactory.Create(), pattern, 0)
+                            var requestInvoke = requestDelegateFactory.Create();
+                            var builder = new RouteEndpointBuilder(async (HttpContext context) =>
+                            {
+                                await requestInvoke(context);
+
+                                if (context.Features.Get<CustomEndpointResult>() is { } result)
+                                {
+                                    await context.Response.WriteAsJsonAsync(result.Result, result.Type, context.RequestAborted);
+                                }
+                            }, pattern, 0)
                             {
                                 DisplayName = (string?)$"{declaration.Name}.{method.Name}",
                             };
@@ -133,5 +123,65 @@ internal static partial class CustomerEndpointExtensions
         public override IChangeToken GetChangeToken() => _token;
 
         public void Add(Action<EndpointBuilder> convention) => _conventions.Add(convention);
+
+        private record CustomEndpointResult(Type Type)
+        {
+            public object? Result { get; init; }
+        }
+
+        private class RequestDelegateFactory
+        {
+            private readonly ObjectFactory _factory;
+            private readonly MethodInfo _method;
+
+            public RequestDelegateFactory(Type container, MethodInfo method)
+            {
+                _factory = ActivatorUtilities.CreateFactory(container, Array.Empty<Type>());
+                _method = method;
+            }
+
+            public RequestDelegate Create()
+            {
+                if (_method.ReturnType is { IsGenericType: true } r && r.GetGenericTypeDefinition() == typeof(Task<>))
+                {
+                    var type = r.GetGenericArguments()[0];
+                    var getMethod = r.GetProperty("Result")!.GetGetMethod()!;
+
+                    return async context =>
+                    {
+                        var instance = _factory(context.RequestServices, null);
+                        var task = _method.Invoke(instance, null);
+
+                        await (task as Task)!;
+
+                        var result = getMethod.Invoke(task, null);
+
+                        context.Features.Set(new CustomEndpointResult(type) { Result = result });
+                    };
+                }
+                else if (_method.ReturnType == typeof(Task))
+                {
+                    return context =>
+                    {
+                        var instance = _factory(context.RequestServices, null);
+                        var task = _method.Invoke(instance, null);
+
+                        return (Task)task!;
+                    };
+                }
+                else
+                {
+                    return context =>
+                    {
+                        var instance = _factory(context.RequestServices, null);
+                        var result = _method.Invoke(instance, null);
+
+                        context.Features.Set(new CustomEndpointResult(_method.ReturnType) { Result = result });
+
+                        return Task.CompletedTask;
+                    };
+                }
+            }
+        }
     }
 }
